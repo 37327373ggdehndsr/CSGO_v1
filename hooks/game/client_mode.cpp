@@ -1,13 +1,5 @@
 #include "../hooks.h"
 
-void patch( PVOID address, const int type, const int bytes )
-{
-	DWORD d, ds;
-	VirtualProtect( address, bytes, PAGE_EXECUTE_READWRITE, &d );
-	memset( address, type, bytes );
-	VirtualProtect( address, bytes, d, &ds );
-}
-
 bool __stdcall hooks::client_mode::create_move::fn( float input_sample_time, c_user_cmd* cmd )
 {
 	static const auto original = m_client_mode->get_original<T>( index );
@@ -22,12 +14,6 @@ bool __stdcall hooks::client_mode::create_move::fn( float input_sample_time, c_u
 	globals::m_packet = true;
 	globals::angles::m_view = cmd->m_view_angles;
 	
-	bool m_call = false;
-	if ( !m_call ) {
-		m_call = true;
-		static int* fakelagboost = reinterpret_cast< int* > ( SIG( "engine.dll", "0F 4F F0 89 5D FC" ).get( ) - 0x6 );
-		patch( static_cast< PVOID > ( fakelagboost ), 17, 1 );
-	}
 
 	if ( globals::m_local && globals::m_local->is_alive( ) && interfaces::engine->in_game_and_connected( ) )
 	{ 
@@ -125,21 +111,6 @@ bool __stdcall hooks::client_mode::create_move::fn( float input_sample_time, c_u
 	globals::angles::m_real = cmd->m_view_angles;
 
 	if ( globals::m_packet ) globals::angles::m_non_visual = cmd->m_view_angles; else globals::angles::m_visual = cmd->m_view_angles;
-
-	if ( globals::m_local && globals::m_local->is_alive( ) && interfaces::engine->in_game_and_connected( ) )
-	{
-		if ( m_cfg.misc.pitch_null )
-		{
-			if ( globals::m_local->get_anim_state( )->m_in_hit_ground_animation )
-			{
-				if ( globals::m_local->get_anim_state( )->m_head_height_or_offset_from_hitting_ground_animation )
-				{
-					globals::angles::m_non_visual.x = 0.0f;
-					globals::angles::m_visual.x = 0.0f;
-				}
-			}
-		}
-	}
 	
 	movement->fix( globals::angles::m_view, cmd->m_view_angles );
 
@@ -161,6 +132,7 @@ void __stdcall hooks::client_mode::override_view::fn( c_view_setup* setup )
 
 	if ( interfaces::engine->in_game_and_connected( ) && globals::m_local )
 	{
+
 		if ( g_hvh->m_in_duck )
 			setup->m_origin.z = globals::m_local->get_abs_origin( ).z + 64.f;
 	}

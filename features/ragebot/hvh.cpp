@@ -2,8 +2,6 @@
 
 void hvh::AntiAim() {
 	auto wpn = globals::m_local->get_active_weapon();
-	bool is_manual = false;
-	bool is_freestand = m_cfg.antiaim.freestand_override;
 
 	if (!wpn)
 		return;
@@ -46,7 +44,7 @@ void hvh::pitch() {
 	switch (m_cfg.antiaim.pitch)
 	{
 	case 1:
-		globals::m_cmd->m_view_angles.x = -90.9f;
+		globals::m_cmd->m_view_angles.x = 90.9f;
 		break;
 	}
 }
@@ -140,15 +138,16 @@ void hvh::lby_update(float sampletime, c_user_cmd* ucmd, bool& sendpacket){
 }
 
 void hvh::adjustyaw() {
+	bool state = m_cfg.antiaim.key_swap;
 	if (m_cfg.antiaim.fake)
 	{
 		lby_update(0.f, globals::m_cmd, globals::m_packet);
 
 		if (!globals::m_packet)
-			globals::m_cmd->m_view_angles.y -= (m_cfg.antiaim.max_fake_delta * 2) * m_side;
+			globals::m_cmd->m_view_angles.y -= (m_cfg.antiaim.max_fake_delta * 2) * state;
 
 		if (lby && globals::m_local->get_velocity().length_2d() < 10.f && !(globals::m_cmd->m_buttons & IN_JUMP) && globals::m_local->get_flags() & FL_ONGROUND)
-			globals::m_cmd->m_view_angles.y -= (m_cfg.antiaim.max_fake_delta * 2) * m_side;
+			globals::m_cmd->m_view_angles.y -= (m_cfg.antiaim.max_fake_delta * 2) * state;
 	}
 	if (m_cfg.antiaim.fake && !m_cfg.antiaim.jitter_around)
 	{

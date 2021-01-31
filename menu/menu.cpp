@@ -792,6 +792,8 @@ void aa()
 
 
 		ImGui::BeginChild("##aimbot.1", ImVec2(0, 0), false); {
+			
+
 			ImGui::Combo("pitch", &m_cfg.antiaim.pitch, pitch, ARRAYSIZE(pitch));
 			ImGui::Combo("Base yaw", &m_cfg.antiaim.base_yaw, attarget, ARRAYSIZE(attarget));
 			ImGui::Combo("yaw", &m_cfg.antiaim.yaw, yaw, ARRAYSIZE(yaw));
@@ -818,15 +820,15 @@ void aa()
 		ImGui::BeginChild("##aimbot.3", ImVec2(0, 0), false); {
 			ImGui::Combo("FL Type", &m_cfg.misc.lag_type, fl_type, ARRAYSIZE(fl_type));
 			if (ImGui::BeginCombo("FL", "Enabler")) {
-				ImGui::Checkbox("move", &m_cfg.misc.lag_enablers[0]);
-				ImGui::Checkbox("stand", &m_cfg.misc.lag_enablers[1]);
+				ImGui::Checkbox("stand", &m_cfg.misc.lag_enablers[0]);
+				ImGui::Checkbox("move", &m_cfg.misc.lag_enablers[1]);
 				ImGui::Checkbox("air", &m_cfg.misc.lag_enablers[2]);
-				ImGui::Checkbox("slo", &m_cfg.misc.lag_enablers[3]);
+				ImGui::Checkbox("on_peek", &m_cfg.misc.lag_enablers[3]);
 
 				ImGui::EndCombo();
 			}
 			ImGui::Checkbox("bustro sestb",&m_cfg.misc.unlimit_duck);
-			ImGui::SliderFloat("#FLSlider", &m_cfg.misc.lag_value, 0.f, 14.f, "FakeLag Amount");
+			ImGui::SliderFloat("#FLSlider", &m_cfg.misc.lag_value, 0.f, 14.f);
 			ImGui::Checkbox("FD", &m_cfg.misc.fake_duck);
 			Keybind("KEY6 ", &m_cfg.misc.fake_duck_key, &m_cfg.misc.fake_duck_key_mod);
 		}

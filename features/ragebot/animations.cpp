@@ -1,58 +1,55 @@
 #include "../features.h"
 
-void extrapolate( c_cs_player* player, vec3_t& origin, vec3_t& velocity, int& flags, bool on_ground )
-{
-	static const auto sv_gravity = interfaces::cvar->find_var( _( "sv_gravity" ) );
-	static const auto sv_jump_impulse = interfaces::cvar->find_var( _( "sv_jump_impulse" ) );
+void extrapolate(c_cs_player* player, vec3_t& origin, vec3_t& velocity, int& flags, bool on_ground) {
+	vec3_t					  start, end, normal;
+	c_game_trace			  trace;
+	c_trace_filter_world_only filter;
 
-	if ( !( flags & FL_ONGROUND ) )
-		velocity.z -= TICKS_TO_TIME( sv_gravity->get_float( ) );
+	// define trace start.
+	start = origin;
 
-	else if ( player->get_flags( ) & FL_ONGROUND && !on_ground )
-		velocity.z = sv_jump_impulse->get_float( );
+	// move trace end one tick into the future using predicted velocity.
+	end = start + (velocity * interfaces::global_vars->m_interval_per_tick);
 
-	const auto src = origin;
-	auto end = src + velocity * interfaces::global_vars->m_interval_per_tick;
+	// trace.
+	interfaces::trace->trace_ray(ray_t(start, end, player->get_collideable()->obb_mins(), player->get_collideable()->obb_maxs()), CONTENTS_SOLID, &filter, &trace);
 
-	ray_t r;
-	r.init( src, end, player->get_collideable( )->obb_mins( ), player->get_collideable( )->obb_maxs( ) );
+	// we hit shit
+	// we need to fix shit.
+	if (trace.m_fraction != 1.f) {
 
-	c_game_trace t;
-	c_trace_filter filter;
-	filter.m_skip = player;
+		// fix sliding on planes.
+		for (int i{ }; i < 2; ++i) {
+			velocity -= trace.m_plane.m_normal * velocity.dot_product(trace.m_plane.m_normal);
 
-	interfaces::trace->trace_ray( r, MASK_PLAYERSOLID, &filter, &t );
+			float adjust = velocity.dot_product(trace.m_plane.m_normal);
+			if (adjust < 0.f)
+				velocity -= (trace.m_plane.m_normal * adjust);
 
-	if ( t.m_fraction != 1.f )
-	{
-		for ( auto i = 0; i < 2; i++ )
-		{
-			velocity -= t.m_plane.m_normal * velocity.dot_product( t.m_plane.m_normal );
+			start = trace.m_end_pos;
+			end = start + (velocity * (interfaces::global_vars->m_interval_per_tick * (1.f - trace.m_fraction)));
 
-			const auto dot = velocity.dot_product( t.m_plane.m_normal );
-			if ( dot < 0.f )
-				velocity -= vec3_t( dot * t.m_plane.m_normal.x,
-					dot * t.m_plane.m_normal.y, dot * t.m_plane.m_normal.z );
-
-			end = t.m_end_pos + velocity * TICKS_TO_TIME( 1.f - t.m_fraction );
-
-			r.init( t.m_end_pos, end, player->get_collideable( )->obb_mins( ), player->get_collideable( )->obb_maxs( ) );
-			interfaces::trace->trace_ray( r, MASK_PLAYERSOLID, &filter, &t );
-
-			if ( t.m_fraction == 1.f )
+			interfaces::trace->trace_ray(ray_t(start, end, player->get_collideable()->obb_mins(), player->get_collideable()->obb_maxs()), CONTENTS_SOLID, &filter, &trace);
+			if (trace.m_fraction == 1.f)
 				break;
 		}
 	}
 
-	origin = end = t.m_end_pos;
+	// set new final origin.
+	start = end = origin = trace.m_end_pos;
+
+	// move endpos 2 units down.
+	// this way we can check if we are in/on the ground.
 	end.z -= 2.f;
 
-	r.init( origin, end, player->get_collideable( )->obb_mins( ), player->get_collideable( )->obb_maxs( ) );
-	interfaces::trace->trace_ray( r, MASK_PLAYERSOLID, &filter, &t );
+	// trace.
+	interfaces::trace->trace_ray(ray_t(start, end, player->get_collideable()->obb_mins(), player->get_collideable()->obb_maxs()), CONTENTS_SOLID, &filter, &trace);
 
+	// strip onground flag.
 	flags &= ~FL_ONGROUND;
 
-	if ( t.did_hit( ) && t.m_plane.m_normal.z > .7f )
+	// add back onground flag if we are onground.
+	if (trace.m_fraction != 1.f && trace.m_plane.m_normal.z > 0.7f)
 		flags |= FL_ONGROUND;
 }
 
@@ -69,8 +66,6 @@ void c_animations::animation_info::update_animations( animation* record, animati
 		// apply record.
 		record->apply( player );
 		
-		//// run update enemy
-		//g_animations->manage_enemy_animations(player,from);
 
 		// run update.
 		return m_update_player( player );
@@ -91,13 +86,22 @@ void c_animations::animation_info::update_animations( animation* record, animati
 	auto old_origin = from->origin;
 	auto old_flags = from->flags;
 
+	// did the player shoot?
+	record->didshot = record->last_shot_time > from->sim_time && record->last_shot_time <= record->sim_time;
+
 	for ( auto i = 0; i < record->lag; i++ )
 	{
 		// move time forward.
 		const auto time = from->sim_time + TICKS_TO_TIME( i + 1 );
 		const auto lerp = 1.f - ( record->sim_time - time ) / ( record->sim_time - from->sim_time );
+		
+		// lerp eye angles.
+		auto eye_angles = math::interpolate(from->eye_angles, record->eye_angles, lerp);
+		math::normalize(eye_angles);
+		player->get_eye_angles() = eye_angles;
 
-		/*player->GetDuckAmount() = Interpolate2(from->duck, record->duck, lerp);*/
+		// lerp duck amount.
+		player->get_duck_amount() = math::interpolate(from->duck, record->duck, lerp);
 
 		// resolve player.
 		if ( record->lag - 1 == i )
@@ -111,6 +115,15 @@ void c_animations::animation_info::update_animations( animation* record, animati
 			old_flags = player->get_flags( );
 		}
 
+		// correct shot desync.
+		if (record->didshot)
+		{
+			player->get_eye_angles() = record->last_reliable_angle;
+
+			if (record->last_shot_time <= time)
+				player->get_eye_angles() = record->eye_angles;
+		}
+
 		player->get_anim_state( )->m_feet_yaw_rate = 0.f;
 
 		// backup simtime.
@@ -122,15 +135,15 @@ void c_animations::animation_info::update_animations( animation* record, animati
 		// run update enemy
 		g_animations->manage_enemy_animations(player, record);
 
+		// call resolver
+		g_resolver->resolve_yaw(record);
+
 		// run update.
 		m_update_player( player );
 
 		// restore old simtime.
 		player->get_sim_time( ) = backup_simtime;
 	}
-
-	if ( !record->dormant && !from->dormant )
-		record->didshot = record->last_shot_time > from->sim_time && record->last_shot_time <= record->sim_time;
 }
 
 float AngleDiff(float destAngle, float srcAngle) {
@@ -185,26 +198,22 @@ void c_animations::animation_info::m_update_player( c_cs_player* pEnt )
 
 	float curtime = interfaces::global_vars->m_cur_time;
 	float frametime = interfaces::global_vars->m_frame_time;
-	float realtime = interfaces::global_vars->m_real_time;
-	float abstime = interfaces::global_vars->m_absolute_frame_time;
-	float framecount = interfaces::global_vars->m_frame_count;
-	float interp = interfaces::global_vars->m_interpolation_amount;
+
+	// get player anim state.
+	c_anim_state* const state = pEnt->get_anim_state();
+	if (!state)
+		return;
 
 	float m_flSimulationTime = pEnt->get_sim_time( );
 	int m_iNextSimulationTick = m_flSimulationTime / interfaces::global_vars->m_interval_per_tick + 1;
 
-	interfaces::global_vars->m_cur_time = m_flSimulationTime;
-	interfaces::global_vars->m_real_time = m_flSimulationTime;
+	// fixes for networked players
 	interfaces::global_vars->m_frame_time = interfaces::global_vars->m_interval_per_tick;
-	interfaces::global_vars->m_absolute_frame_time = interfaces::global_vars->m_interval_per_tick;
-	interfaces::global_vars->m_frame_count = m_iNextSimulationTick;
-	interfaces::global_vars->m_interpolation_amount = 0;
-
-	pEnt->get_eflags( ) &= ~0x1000;
-	pEnt->get_abs_velocity( ) = pEnt->get_velocity( );
-	
-	if ( pEnt->get_anim_state( )->m_last_client_side_animation_update_frame_count == interfaces::global_vars->m_frame_count )
-		pEnt->get_anim_state( )->m_last_client_side_animation_update_frame_count = interfaces::global_vars->m_frame_count - 1;
+	interfaces::global_vars->m_cur_time = pEnt->get_sim_time();
+	pEnt->get_eflags() &= ~0x1000;
+		
+	if (state->m_last_client_side_animation_update_frame_count == interfaces::global_vars->m_frame_count )
+		state->m_last_client_side_animation_update_frame_count -= 1.f;
 
 	const bool backup_invalidate_bone_cache = invalidate_bone_cache;
 
@@ -221,28 +230,25 @@ void c_animations::animation_info::m_update_player( c_cs_player* pEnt )
 	pEnt->invalidate_physics_recursive( SEQUENCE_CHANGED );
 
 	invalidate_bone_cache = backup_invalidate_bone_cache;
-
-	interfaces::global_vars->m_cur_time = curtime;
-	interfaces::global_vars->m_real_time = realtime;
+	
 	interfaces::global_vars->m_frame_time = frametime;
-	interfaces::global_vars->m_absolute_frame_time = abstime;
-	interfaces::global_vars->m_frame_count = framecount;
-	interfaces::global_vars->m_interpolation_amount = interp;
+	interfaces::global_vars->m_cur_time = curtime;
 }
 
 void c_animations::manage_local_animations( )
 {
-	auto animstate = globals::m_local->get_anim_state( );
-	if ( !animstate )
+	// get player anim state.
+	c_anim_state* const state = globals::m_local->get_anim_state();
+	if (!state)
 		return;
 
 	const auto backup_frametime = interfaces::global_vars->m_frame_time;
 	const auto backup_curtime = interfaces::global_vars->m_cur_time;
 
-	animstate->m_goal_feet_yaw = globals::angles::m_visual.y;
+	state->m_goal_feet_yaw = globals::angles::m_visual.y;
 
-	if ( animstate->m_last_client_side_animation_update_frame_count == interfaces::global_vars->m_frame_count )
-		animstate->m_last_client_side_animation_update_frame_count -= 1.f;
+	if (state->m_last_client_side_animation_update_frame_count == interfaces::global_vars->m_frame_count )
+		state->m_last_client_side_animation_update_frame_count -= 1.f;
 
 	interfaces::global_vars->m_frame_time = interfaces::global_vars->m_interval_per_tick;
 	interfaces::global_vars->m_cur_time = globals::m_local->get_sim_time( );
@@ -250,8 +256,8 @@ void c_animations::manage_local_animations( )
 	globals::m_local->get_eflags( ) &= ~0x1000;
 	globals::m_local->get_abs_velocity( ) = globals::m_local->get_velocity( );
 
-	static float angle = animstate->m_goal_feet_yaw;
-	animstate->m_feet_yaw_rate = 0.f;
+	static float angle = state->m_goal_feet_yaw;
+	state->m_feet_yaw_rate = 0.f;
 
 	c_animation_layer backup_layers[ 13 ];
 	if ( globals::m_local->get_sim_time( ) != globals::m_local->get_old_sim_time( ) )
@@ -260,16 +266,16 @@ void c_animations::manage_local_animations( )
 			( sizeof( c_animation_layer ) * globals::m_local->num_overlays( ) ) );
 
 		globals::m_call_client_update = true;
-		globals::m_local->update_animation_state( animstate, globals::angles::m_non_visual );
+		globals::m_local->update_animation_state(state, globals::angles::m_non_visual );
 		globals::m_local->update_client_side_animation( );
 		globals::m_call_client_update = false;
 
-		angle = animstate->m_goal_feet_yaw;
+		angle = state->m_goal_feet_yaw;
 
 		std::memcpy( globals::m_local->get_animlayers( ), backup_layers,
 			( sizeof( c_animation_layer ) * globals::m_local->num_overlays( ) ) );
 	}
-	animstate->m_goal_feet_yaw = angle;
+	state->m_goal_feet_yaw = angle;
 
 	interfaces::global_vars->m_cur_time = backup_curtime;
 	interfaces::global_vars->m_frame_time = backup_frametime;

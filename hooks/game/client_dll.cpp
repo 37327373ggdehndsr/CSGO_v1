@@ -39,21 +39,21 @@ void __stdcall hooks::client_dll::frame_stage_notify::fn( e_client_frame_stage s
 			}
 			if ( stage == FRAME_NET_UPDATE_END && globals::m_local->is_alive( ) )
 			{
-				//static auto r_jiggle_bones = interfaces::cvar->find_var( _( "r_jiggle_bones" ) );
-				//*( float* )( ( DWORD )&r_jiggle_bones->m_change_callback + 0xC ) = NULL;
-				//if ( r_jiggle_bones->get_int( ) > 0 )
-				//	r_jiggle_bones->set_value( 0 );
-				//for ( int i = 1; i < interfaces::global_vars->m_max_clients; i++ ) 
-				//{
-				//	auto entity = reinterpret_cast< c_cs_player* >( interfaces::entity_list->get_client_entity( i ) );
-				//	if ( entity != nullptr && entity->is_player( ) && entity->get_index( ) != globals::m_local->get_index( ) && entity->is_alive( ) ) 
-				//	{
-				//		const auto var_map = reinterpret_cast< uintptr_t >( entity ) + 36;
+				static auto r_jiggle_bones = interfaces::cvar->find_var( _( "r_jiggle_bones" ) );
+				*( float* )( ( DWORD )&r_jiggle_bones->m_change_callback + 0xC ) = NULL;
+				if ( r_jiggle_bones->get_int( ) > 0 )
+					r_jiggle_bones->set_value( 0 );
+				for ( int i = 1; i < interfaces::global_vars->m_max_clients; i++ ) 
+				{
+					auto entity = reinterpret_cast< c_cs_player* >( interfaces::entity_list->get_client_entity( i ) );
+					if ( entity != nullptr && entity->is_player( ) && entity->get_index( ) != globals::m_local->get_index( ) && entity->is_alive( ) ) 
+					{
+						const auto var_map = reinterpret_cast< uintptr_t >( entity ) + 36;
 
-				//		for ( auto index = 0; index < *reinterpret_cast< int* >( var_map + 20 ); index++ )
-				//			*reinterpret_cast< uintptr_t* >( *reinterpret_cast< uintptr_t* >( var_map ) + index * 12 ) = 0;
-				//	}
-				//}
+						for ( auto index = 0; index < *reinterpret_cast< int* >( var_map + 20 ); index++ )
+							*reinterpret_cast< uintptr_t* >( *reinterpret_cast< uintptr_t* >( var_map ) + index * 12 ) = 0;
+					}
+				}
 
 				g_animations->manage_fake_animations( );
 				g_animations->manage_local_animations( );
@@ -67,8 +67,6 @@ void __stdcall hooks::client_dll::frame_stage_notify::fn( e_client_frame_stage s
 				{ 
 					if ( globals::m_local->get_flags( ) & FL_ONGROUND ) {
 						globals::m_local->get_anim_state( )->m_on_ground = true;
-						if ( !m_cfg.misc.pitch_null )
-							globals::m_local->get_anim_state( )->m_in_hit_ground_animation = false;
 					}
 					globals::m_local->set_abs_angles( qangle_t( 0, globals::m_local->get_anim_state( )->m_goal_feet_yaw, 0 ) );
 				}

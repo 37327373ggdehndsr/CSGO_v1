@@ -71,6 +71,15 @@ namespace interfaces {
 		return m_RandomFloat(flLow, flHigh);
 	}
 
+	typedef int(*RandomInt_t)(int, int);
+	RandomInt_t m_RandomInt;
+	int random_int(int flLow, int flHigh) {
+		if (m_RandomInt == NULL)
+			m_RandomInt = (RandomInt_t)GetProcAddress(GetModuleHandle(_("vstdlib.dll")), _("RandomInt"));
+
+		return m_RandomInt(flLow, flHigh);
+	}
+
 	i_base_client_dll* client_dll = nullptr;
 	i_engine_client* engine = nullptr;
 	i_client_entity_list* entity_list = nullptr;

@@ -162,8 +162,7 @@ void c_animations::update_players()
 			if (!_animation.frames[i].is_valid(0.45f, 0.2f))
 				_animation.frames.erase(_animation.frames.begin() + i);
 
-		// call resolver
-	//	resolve_angles( player );
+
 
 		// have we already seen this update?
 		if (player->get_sim_time() == player->get_old_sim_time())

@@ -237,9 +237,6 @@ public:
 	{
 		bool enabled;
 
-		int tab_select = 0;
-		int tab_select_2 = 0;
-
 		bool backtracking;
 		bool autoscope;
 
@@ -250,7 +247,6 @@ public:
 		
 		struct
 		{
-
 			bool enabled;
 			bool automatic_fire;
 
@@ -314,12 +310,10 @@ public:
 
 	struct
 	{
-		int tab_select = 0;
-
 		int pitch;
 		int yaw;
 		bool fake;
-		int key_swap =0;int key_swap_mod =1;
+		int key_swap =0; int key_swap_mod =1;
 		int base_yaw;
 
 		float body_lean;
@@ -330,105 +324,47 @@ public:
 
 		float max_fake_delta;
 		float jitter;
-
-		int left_key;
-		int right_key;
-		int backward_key;
-		bool freestand_override;
-
 	} antiaim;
 
 	struct
 	{
-		int tab_select = 0;
-		int tab_select_2 = 0;
-		int tab_select_3 = 0;
 
-		bool visibility[ 2 ];
-		int material;
-		bool weapon[ 2 ];
-		DWORD weapon_col_0;
-		DWORD weapon_col_1;
-		int illuminate;
-		bool wireframe;
-		bool wireframe_next;
 
 	} esp;
 
 	struct
 	{
-		int material;
-		bool weapon[ 2 ];
-		DWORD weapon_col_0;
-		DWORD weapon_col_1;
-		int illuminate;
-		bool wireframe;
-		bool wireframe_next;
+
+
 
 	} esp_team;
 
 	struct
 	{
-		int material;
-		bool weapon[ 2 ];
 
 
-		int illuminate;
-		int desync;
-		int desync_illuminate;
-
-		DWORD desync_clr;
-		float desync_alpha;
-
-		DWORD illuminate_desync_clr;
-		float illuminate_desync_alpha;
-
-		bool wireframe;
-		bool wireframe_next;
-
-		bool wireframe_desync;
-		bool wireframe_desync_next;
 
 	} esp_local;
 
 	struct
 	{
 
-		bool remove_sleeve;
-		bool wireframe;
-		bool wireframe_next;
 
-		int material;
-		int illuminate;
-
-		DWORD clr;
-		DWORD il_clr;
-
-		float alpha;
-		float il_alpha;
 
 	} chams_hands;
 
 	struct
 	{
-		bool wireframe;
-		bool wireframe_next;
 
-		int material;
-		int illuminate;
 
-		DWORD clr;
-		DWORD il_clr;
 
-		float alpha;
-		float il_alpha;
 	} chams_weapons;
 
 	struct
 	{
-
-
-	} advanced_esp;
+		float view_fov;
+		float fov_changer;
+	} other;
 
 	struct
 	{
@@ -452,17 +388,6 @@ public:
 	{
 
 
-		DWORD enemy_chams; float enemy_chams_alpha;
-		DWORD team_chams; float team_chams_alpha;
-
-		DWORD enemy_chams_xqz; float enemy_chams_alpha_xqz;
-		DWORD team_chams_xqz; float team_chams_alpha_xqz;
-
-		DWORD enemy_illuminate; float enemy_illuminate_alpha;
-		DWORD team_illuminate; float team_illuminate_alpha;
-
-		DWORD local_chams; float local_chams_alpha;
-		DWORD local_illuminate; float local_illuminate_alpha;
 
 	} colors;
 
@@ -474,16 +399,20 @@ public:
 
 	struct
 	{
-		int tab_select = 0;
-
 		bool bhop;
 		int strafe;
 
+		bool thirdperson;
+		int tp_key = 0;
+		int tp_key_mod = 1;
+		float thirdperson_distance;
+		bool tp_grenade;
+		bool force_tp_when_dead;
+
 		bool unlimit_duck;
 		bool fake_duck;
-		int fake_duck_key =0 ;
-		int fake_duck_key_mod=1;
-
+		int fake_duck_key = 0;
+		int fake_duck_key_mod = 1;
 
 		bool slowwalk;
 		float slowwalk_value;
@@ -493,19 +422,8 @@ public:
 		bool lag_enablers[ 4 ];
 		float lag_value;
 
-		bool fix_leg_move = true;
-		bool static_legs_in_air;
-		bool pitch_null;
-
 		int hitsound;
-	} misc;
-
-
-	struct
-	{
-		float dim;
-	} gui;
-
+	} misc;;
 
 	int selected_config = 0;
 	std::string new_config_name;

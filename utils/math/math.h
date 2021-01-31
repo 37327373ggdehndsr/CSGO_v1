@@ -86,6 +86,10 @@ namespace math {
 	
 	float normalize_yaw(float yaw);
 
+	float interpolate(const float from, const float to, const float percent);
+
+	qangle_t interpolate(const qangle_t from, const qangle_t to, const float percent);
+
 	void normalize_angle(float& angle);
 
 	__forceinline float normalize_angles(float angle) {

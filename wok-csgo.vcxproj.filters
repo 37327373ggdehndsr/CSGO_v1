@@ -37,9 +37,6 @@
     <ClCompile Include="sdk\datatypes\misc.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="features\visuals\chams.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="events\events.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -200,7 +197,6 @@
     <ClInclude Include="features\ragebot\prediction.h" />
     <ClInclude Include="sdk\interfaces\i_localize.h" />
     <ClInclude Include="sdk\interfaces\i_panel.h" />
-    <ClInclude Include="features\visuals\chams.h" />
     <ClInclude Include="events\events.h" />
     <ClInclude Include="utils\cfg\json\json_fwd.hpp" />
     <ClInclude Include="utils\cfg\json\json.hpp" />

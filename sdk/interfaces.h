@@ -5,6 +5,7 @@ namespace interfaces {
 	void init();
 	void random_seed(uint32_t seed);
 	float random_float(float flLow, float flHigh);
+	int random_int(int flLow, int flHigh);
 
 	extern i_base_client_dll*		client_dll;
 	extern i_engine_client*			engine;

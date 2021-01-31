@@ -17,6 +17,14 @@ namespace math {
 		return yaw;
 	}
 
+	qangle_t interpolate(const qangle_t from, const qangle_t to, const float percent) {
+		return to * percent + from * (1.f - percent);
+	}
+
+	float interpolate(const float from, const float to, const float percent) {
+		return to * percent + from * (1.f - percent);
+	}
+
 	void normalize_angle(float& angle) {
 		float rot;
 

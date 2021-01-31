@@ -68,9 +68,6 @@ namespace detours {
 
 	void init()
 	{
-		if (!interfaces::engine->in_game_and_connected())
-			return;
-
 		static const auto send_move_add = SIG("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A").get();
 		original_cl_move = (decltype(&send_move))DetourFunction((PBYTE)send_move_add, (PBYTE)send_move);
 
