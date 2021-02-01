@@ -1,5 +1,4 @@
 #include "hooks.h"
-#include "../features/ragebot/tickbase.h"
 
 namespace hooks {
 	void init( )

@@ -1,5 +1,5 @@
 #include "detours.h"
-#include "../features/ragebot/tickbase.h"
+#include "../features/tickbase.h"
 
 namespace detours {
 

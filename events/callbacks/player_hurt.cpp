@@ -1,5 +1,5 @@
 #include "../events.h"
-#include "../../features/ragebot/ragebot.h"
+#include "../../features/ragebot.h"
 
 #include "../../utils/array/sound.h"
 #pragma comment(lib, "Winmm.lib")

@@ -132,7 +132,6 @@ void __stdcall hooks::client_mode::override_view::fn( c_view_setup* setup )
 
 	if ( interfaces::engine->in_game_and_connected( ) && globals::m_local )
 	{
-
 		if ( g_hvh->m_in_duck )
 			setup->m_origin.z = globals::m_local->get_abs_origin( ).z + 64.f;
 	}

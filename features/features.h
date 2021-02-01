@@ -1,17 +1,17 @@
 #pragma once
 
-#include "ragebot/penetration.h"
+#include "penetration.h"
 
-#include "ragebot/animations.h"
+#include "animations.h"
 
-#include "ragebot/hvh.h"
+#include "hvh.h"
 
-#include "ragebot/prediction.h"
+#include "prediction.h"
 
-#include "ragebot/ragebot.h"
+#include "ragebot.h"
 
-#include "ragebot/resolver.h"
+#include "resolver.h"
 
-#include "ragebot/tickbase.h"
+#include "tickbase.h"
 
-#include "misc/movement.h"
+#include "movement.h"

@@ -31,9 +31,6 @@
     <ClCompile Include="utils\input\input.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="features\ragebot\prediction.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="sdk\datatypes\misc.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -46,34 +43,10 @@
     <ClCompile Include="utils\math\datatypes.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="features\misc\movement.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="utils\cfg\config.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="features\ragebot\animations.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\ragebot.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\tickbase.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="hooks\detours.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\lagcomp.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\penetration.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\hvh.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="features\ragebot\resolver.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="utils\imgui\imgui.cpp">
@@ -136,6 +109,33 @@
     <ClCompile Include="hooks\game\tick_base.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="features\movement.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\animations.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\hvh.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\lagcomp.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\penetration.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\prediction.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\ragebot.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\resolver.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="features\tickbase.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_includes.h" />
@@ -194,7 +194,6 @@
     <ClInclude Include="sdk\interfaces\c_cs_player_resource.h" />
     <ClInclude Include="singleton.h" />
     <ClInclude Include="utils\input\input.h" />
-    <ClInclude Include="features\ragebot\prediction.h" />
     <ClInclude Include="sdk\interfaces\i_localize.h" />
     <ClInclude Include="sdk\interfaces\i_panel.h" />
     <ClInclude Include="events\events.h" />
@@ -231,21 +230,14 @@
     <ClInclude Include="utils\cfg\json\detail\conversions\to_chars.hpp" />
     <ClInclude Include="utils\cfg\json\detail\conversions\from_json.hpp" />
     <ClInclude Include="utils\obfuscation\xor.h" />
-    <ClInclude Include="features\misc\movement.h" />
     <ClInclude Include="sdk\interfaces\i_input.h" />
     <ClInclude Include="sdk\interfaces\i_glow_object_manager.h" />
     <ClInclude Include="sdk\interfaces\i_global_vars.h" />
     <ClInclude Include="sdk\interfaces\i_client_state.h" />
     <ClInclude Include="utils\cfg\config.h" />
     <ClInclude Include="hooks\lib\detours.h" />
-    <ClInclude Include="features\ragebot\animations.h" />
-    <ClInclude Include="features\ragebot\ragebot.h" />
-    <ClInclude Include="features\ragebot\tickbase.h" />
     <ClInclude Include="utils\array\sound.h" />
     <ClInclude Include="hooks\detours.h" />
-    <ClInclude Include="features\ragebot\penetration.h" />
-    <ClInclude Include="features\ragebot\hvh.h" />
-    <ClInclude Include="features\ragebot\resolver.h" />
     <ClInclude Include="utils\imgui\imconfig.h" />
     <ClInclude Include="utils\imgui\imgui.h" />
     <ClInclude Include="utils\imgui\imgui_freetype.h" />
@@ -258,5 +250,13 @@
     <ClInclude Include="menu\menu.h" />
     <ClInclude Include="utils\render\render.h" />
     <ClInclude Include="utils\render\ui.h" />
+    <ClInclude Include="features\movement.h" />
+    <ClInclude Include="features\animations.h" />
+    <ClInclude Include="features\hvh.h" />
+    <ClInclude Include="features\penetration.h" />
+    <ClInclude Include="features\prediction.h" />
+    <ClInclude Include="features\ragebot.h" />
+    <ClInclude Include="features\resolver.h" />
+    <ClInclude Include="features\tickbase.h" />
   </ItemGroup>
 </Project>
