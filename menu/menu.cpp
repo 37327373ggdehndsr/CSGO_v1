@@ -368,8 +368,8 @@ bool Keybind(const char* str_id, int* current_key, int* key_style) {
 
 void r(){
 	const char* type[] = {
-	"dt",
-	"hs"
+	"Rapid",
+	"Hide"
 	};
 	const char* wpn[] = {
 	"AWP",
@@ -380,6 +380,11 @@ void r(){
 	"Smg",
 	"Shotgun",
 	"Pistols"
+	};
+	const char* scop[] = {
+	"Off",
+	"Always",
+	"Hitchance fail",
 	};
 
 	ui::BeginGroupBox("##visuals_body");
@@ -434,10 +439,12 @@ void r(){
 
 				ImGui::Text("Visible dmg");
 				ImGui::SliderFloat("##Mindm1TO", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_awp], 0.f, 100.f);
-				ImGui::Text("Invisible dmg");
-				ImGui::SliderFloat("##autodsm_auto", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_awp], 0, 100);
 				ImGui::Text("HitChans");
 				ImGui::SliderFloat("##Hitchans23AUTO", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_awp], 0.f, 100.f);
+				if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+					ImGui::Text("Dt Hitchanse");
+					ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_awp], 0.f, 100.f);
+				}
 
 				ImGui::Text("Head scale");
 				ImGui::SliderFloat("##Hea2scale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_awp], 0.f, 100.f);
@@ -473,10 +480,12 @@ void r(){
 					
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Mindm1TO", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_scout], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autodsm_auto", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_scout], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##Hitchans23AUTO", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_scout], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_scout], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Hea2scale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_scout], 0.f, 100.f);
@@ -512,10 +521,12 @@ void r(){
 
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Mindm1TO", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_heavy], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autodsm_auto", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_heavy], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##Hitchans23AUTO", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_heavy], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_heavy], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Hea2scale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_heavy], 0.f, 100.f);
@@ -551,10 +562,12 @@ void r(){
 
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Mindm1TO", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_auto], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autodsm_auto", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_auto], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##Hitchans23AUTO", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_auto], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_auto], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Hea2scale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_auto], 0.f, 100.f);
@@ -590,10 +603,12 @@ void r(){
 
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("#4ddmg ", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_rifle], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autawodsamage", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_rifle], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##H5hans ", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_rifle], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_rifle], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Hea4ale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_rifle], 0.f, 100.f);
@@ -629,11 +644,13 @@ void r(){
 					
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Minddfg ", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_smg], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autodsamage", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_smg], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##Hitc3ans ", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_smg], 0.f, 100.f);
-					
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_smg], 0.f, 100.f);
+					}
+
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Hea56ale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_smg], 0.f, 100.f);
 					ImGui::Text("Body scale");
@@ -667,10 +684,12 @@ void r(){
 					}
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Meendmg", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_shotgun], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##awutodamage", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_shotgun], 0, 100);
 					ImGui::Text("HitChans");
 					ImGui::SliderFloat("##Hifdhans ", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_shotgun], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0) {
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_shotgun], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Headsasscale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_shotgun], 0.f, 100.f);
@@ -706,10 +725,12 @@ void r(){
 
 					ImGui::Text("Visible dmg");
 					ImGui::SliderFloat("##Mindmw22qg ", &m_cfg.ragebot.configurations.flt_custom_min_damage[m_cfg_weapon::m_pistols], 0.f, 100.f);
-					ImGui::Text("Invisible dmg");
-					ImGui::SliderFloat("##autodamage", &m_cfg.ragebot.configurations.flt_custom_awall_min_damage[m_cfg_weapon::m_pistols], 0, 100);
-					ImGui::Text("HitChans");
+					ImGui::Text("Hitchans");
 					ImGui::SliderFloat("##Hitsaschans ", &m_cfg.ragebot.configurations.flt_custom_hitchance[m_cfg_weapon::m_pistols], 0.f, 100.f);
+					if (m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0){
+						ImGui::Text("Dt Hitchanse");
+						ImGui::SliderFloat("##Dt hitchanse", &m_cfg.ragebot.configurations.flt_custom_dt_hitchance[m_cfg_weapon::m_pistols], 0.f, 100.f);
+					}
 
 					ImGui::Text("Head scale");
 					ImGui::SliderFloat("##Headfgfscale", &m_cfg.ragebot.configurations.hitboxes.head_scale[m_cfg_weapon::m_pistols], 0.f, 100.f);
@@ -737,7 +758,7 @@ void r(){
 
 			ImGui::Checkbox("Backtracking", &m_cfg.ragebot.backtracking);
 			ImGui::Checkbox("On shot priority", &m_cfg.ragebot.on_shot);
-			ImGui::Checkbox("Automatic scope", &m_cfg.ragebot.autoscope);
+			ImGui::Combo("Automatic scope", &m_cfg.ragebot.autoscope, scop, IM_ARRAYSIZE(scop));
 			ImGui::Checkbox("Automatic stop", &m_cfg.ragebot.autostop);
 
 			ImGui::Text("Advanced");
@@ -763,29 +784,24 @@ void aa()
 {
 
 	const char* pitch[] = {
-	"0",
-	"90"
+	"Off",
+	"Down"
 	};
 	const char* yaw[] = {
-	"0",
-	"180",
+	"Off",
+	"Backward",
 	};
 	const char* attarget[] = {
-	"0",
-	"1",
-	"3"
+	"Off",
+	"View",
+	"Target"
 	};
 	const char* fl_type[] = {
-	"0",
-	"1",
-	"3"
+	"Off",
+	"Max",
+	"Breack"
 	};
-	const char* fl_enables[] = {
-	"0",
-	"1",
-	"3"
-	};
-	
+
 	ui::BeginGroupBox("##visuals_body");
 	{
 		ImGui::Columns(3, NULL, true);
@@ -794,10 +810,10 @@ void aa()
 		ImGui::BeginChild("##aimbot.1", ImVec2(0, 0), false); {
 			
 
-			ImGui::Combo("pitch", &m_cfg.antiaim.pitch, pitch, ARRAYSIZE(pitch));
+			ImGui::Combo("Pitch", &m_cfg.antiaim.pitch, pitch, ARRAYSIZE(pitch));
 			ImGui::Combo("Base yaw", &m_cfg.antiaim.base_yaw, attarget, ARRAYSIZE(attarget));
-			ImGui::Combo("yaw", &m_cfg.antiaim.yaw, yaw, ARRAYSIZE(yaw));
-			ImGui::SliderFloat("jitter", &m_cfg.antiaim.jitter, 0.f, 180.f);
+			ImGui::Combo("Yaw", &m_cfg.antiaim.yaw, yaw, ARRAYSIZE(yaw));
+			ImGui::SliderFloat("Jitter", &m_cfg.antiaim.jitter, 0.f, 180.f);
 
 		}
 		ImGui::EndChild();
@@ -806,10 +822,10 @@ void aa()
 
 		ImGui::BeginChild("##aimbot.2", ImVec2(0, 0), false); {
 		
-			ImGui::Checkbox("fake", &m_cfg.antiaim.fake);
-			ImGui::Checkbox("fake jitter", &m_cfg.antiaim.jitter_around);
-			ImGui::SliderFloat("fake amount ", &m_cfg.antiaim.max_fake_delta, 0.f, 60.f);
-			ImGui::Text("INVER ");
+			ImGui::Checkbox("Fake", &m_cfg.antiaim.fake);
+			ImGui::Checkbox("Fake jitter", &m_cfg.antiaim.jitter_around);
+			ImGui::SliderFloat("Fake amount ", &m_cfg.antiaim.max_fake_delta, 0.f, 60.f);
+			ImGui::Text("Invert ");
 			Keybind("KEY1 ", &m_cfg.antiaim.key_swap, &m_cfg.antiaim.key_swap_mod);
 
 		}
@@ -818,12 +834,12 @@ void aa()
 		ImGui::NextColumn();
 
 		ImGui::BeginChild("##aimbot.3", ImVec2(0, 0), false); {
-			ImGui::Combo("FL Type", &m_cfg.misc.lag_type, fl_type, ARRAYSIZE(fl_type));
-			if (ImGui::BeginCombo("FL", "Enabler")) {
+			ImGui::Combo("Fakelag ", &m_cfg.misc.lag_type, fl_type, ARRAYSIZE(fl_type));
+			if (ImGui::BeginCombo("Fakelag", "Select")) {
 				ImGui::Checkbox("stand", &m_cfg.misc.lag_enablers[0]);
 				ImGui::Checkbox("move", &m_cfg.misc.lag_enablers[1]);
 				ImGui::Checkbox("air", &m_cfg.misc.lag_enablers[2]);
-				ImGui::Checkbox("on_peek", &m_cfg.misc.lag_enablers[3]);
+				ImGui::Checkbox("slowwalk", &m_cfg.misc.lag_enablers[3]);
 
 				ImGui::EndCombo();
 			}

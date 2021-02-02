@@ -228,7 +228,7 @@ int c_movement::get_ticks_to_stop() {
 void c_movement::fast_stop() {
 	auto wpn_info = globals::m_local->get_active_weapon()->get_cs_weapon_data();
 
-	if (!wpn_info)
+	if (!wpn_info && globals::m_local->get_active_weapon()->is_reload())
 		return;
 
 	auto get_standing_accuracy = [&]() -> const float {

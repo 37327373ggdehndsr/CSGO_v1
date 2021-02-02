@@ -37,6 +37,7 @@ void c_ragebot::update_config() {
 
 	cfg.damage = m_cfg.ragebot.configurations.flt_custom_min_damage[element];
 	cfg.hitchance = m_cfg.ragebot.configurations.flt_custom_hitchance[element];
+	cfg.dt_hitchance = m_cfg.ragebot.configurations.flt_custom_dt_hitchance[element];
 	cfg.m_hitboxes.head = m_cfg.ragebot.configurations.hitboxes.enabled[0][element];
 	cfg.m_hitboxes.neck = m_cfg.ragebot.configurations.hitboxes.enabled[1][element];
 	cfg.m_hitboxes.upper_chest = m_cfg.ragebot.configurations.hitboxes.enabled[2][element];
@@ -703,9 +704,11 @@ bool c_ragebot::Hitchance(vec3_t Aimpoint, bool backtrack, animation* best, int&
 {
 	bool r8 = globals::m_local->get_active_weapon()->get_item_definition_index() == 64;
 
-	if (r8)
+	if(m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0 && m_cfg.ragebot.main.exploit_key)
+		return HitTraces(best, Aimpoint, cfg.dt_hitchance / 100.f, hitbox);
+	else if (r8)
 		return hitchance() > cfg.hitchance * (1.7 * (1.f - r8));
-	else
+	else if (!m_cfg.ragebot.main.exploit_key || !m_cfg.ragebot.main.enabled || m_cfg.ragebot.main.exploit_type == 1)
 		return HitTraces(best, Aimpoint, cfg.hitchance / 100.f, hitbox);
 }
 
@@ -774,14 +777,27 @@ void c_ragebot::Run() {
 	did_dt = false;
 
 	if (hitbox != -1 && target_index != -1 && best_anims && current_aim_position != vec3_t(0, 0, 0)) {
-		if (m_cfg.ragebot.autoscope && weapon->get_cs_weapon_data()->m_weapon_type == WEAPONTYPE_SNIPER && weapon->get_zoom_level() == 0) {
-			globals::m_cmd->m_buttons |= IN_ATTACK2;
-			return;
-		}	
 		movement->auto_stop();
 
 		bool htchance = Hitchance(current_aim_position, false, best_anims, hitbox);
-		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));
+		bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && Hitchance(current_aim_position, false, best_anims, hitbox));
+
+		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));		
+
+		bool can_scope = weapon && weapon->get_zoom_level() == 0 && weapon->is_zoomable(true);
+		if (can_scope) {
+			// always.
+			if (m_cfg.ragebot.autoscope == 1) {
+				globals::m_cmd->m_buttons |= IN_ATTACK2;
+				return;
+			}
+
+			// hitchance fail.
+			else if (m_cfg.ragebot.autoscope == 2 && htchance && !hit) {
+				globals::m_cmd->m_buttons |= IN_ATTACK2;
+				return;
+			}
+		}
 		
 		if (conditions  && htchance && m_is_able_to_shoot) {
 			if (!g_hvh->m_in_duck)

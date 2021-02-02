@@ -54,6 +54,7 @@ public:
 	struct {
 		float damage;
 		float hitchance;
+		float dt_hitchance;
 
 		bool hitchance_consider_hitbox;
 		bool delay_shot;
@@ -98,7 +99,6 @@ public:
 	vec3_t full_scan(animation* anims, int& hitbox, float& simtime, float& best_damage, float min_dmg);
 	vec3_t get_aim_vector(c_cs_player*, float&, vec3_t&, animation*&, int&);
 
-	bool spread_limit();
 	bool Hitchance(vec3_t, bool, animation*, int&);
 	bool is_able_to_shoot(float time);
 
@@ -108,8 +108,8 @@ public:
 	bool can_hit_hitbox(const vec3_t start, const vec3_t end, animation* _animation, studiohdr_t* hdr, int box);
 	bool can_hit(vec3_t start, vec3_t end, animation* record, int box, bool in_shot, matrix3x4_t* bones);
 	void process_misses();
-	void backup_player(animation*);
-	void set_anims(animation*);
-	void restore_player(animation*);
+	void backup_player(animation* anims);
+	void set_anims(animation* anims);
+	void restore_player(animation* anims);
 };
 #define g_ragebot c_ragebot::instance()

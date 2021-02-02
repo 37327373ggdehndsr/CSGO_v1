@@ -446,6 +446,13 @@ public:
 	c_cs_weapon_data* get_cs_weapon_data( );
 	bool is_reload( );
 	bool is_gun( );
+	bool is_zoomable(bool extra_check = true) {
+		return get_item_definition_index() == 40
+			|| get_item_definition_index() == 38
+			|| get_item_definition_index() == 9
+			|| get_item_definition_index() == 11
+			|| (extra_check && (get_item_definition_index() == 39 || get_item_definition_index() == 8));
+	}
 };
 
 class c_local_player {

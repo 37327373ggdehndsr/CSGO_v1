@@ -238,7 +238,7 @@ public:
 		bool enabled;
 
 		bool backtracking;
-		bool autoscope;
+		int autoscope;
 
 		bool autostop;
 		bool on_shot;
@@ -259,6 +259,7 @@ public:
 			bool enabled_force_damage_for_wpn[ 8 ];
 			float flt_force_min_damage[ 8 ];
 			float flt_custom_hitchance[ 8 ];
+			float flt_custom_dt_hitchance[ 8 ];
 
 			struct
 			{
@@ -416,7 +417,8 @@ public:
 
 		bool slowwalk;
 		float slowwalk_value;
-		int slow_key;
+		int slow_key = 0;
+		int slow_key_mod = 1;
 
 		int lag_type;
 		bool lag_enablers[ 4 ];

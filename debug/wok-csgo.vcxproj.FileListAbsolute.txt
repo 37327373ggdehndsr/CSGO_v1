@@ -1,2 +1,0 @@
-C:\Users\xielz\Documents\GitHub\csgo_base\debug\wok-csgo.dll
-C:\Users\xielz\Documents\GitHub\csgo_base\debug\wok-csgo.pdb
