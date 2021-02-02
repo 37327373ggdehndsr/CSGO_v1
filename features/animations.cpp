@@ -1,4 +1,5 @@
 #include "features.h"
+//#include "gay.h"
 
 void extrapolate(c_cs_player* player, vec3_t& origin, vec3_t& velocity, int& flags, bool on_ground) {
 	vec3_t					  start, end, normal;
