@@ -856,6 +856,52 @@ void aa()
 
 }
 
+void v() {
+	ui::BeginGroupBox("##visuals_body");
+	{
+		ImGui::BeginChild("##visuals_body.1", ImVec2(0, 0), false); {
+
+
+
+		}
+		ImGui::EndChild();
+	}
+	ui::EndGroupBox();
+}
+
+void m() {
+	const char* strafers[] = {
+		"Off",
+		"View",
+		"WSD"
+	};
+	const char* Hit[] = {
+		"Off",
+		"arena_switch_press_02",
+		"xz",
+		"paintcan_impact_hard3"
+	};
+	ui::BeginGroupBox("##visuals_body");
+	{
+		ImGui::BeginChild("##aimbot.1", ImVec2(0, 0), false); {
+			ImGui::Checkbox("Bhop", &m_cfg.misc.bhop);
+			ImGui::Combo("Strafer ", &m_cfg.misc.strafe, strafers, ARRAYSIZE(strafers));
+
+			ImGui::Checkbox("Slowwalk", &m_cfg.misc.slowwalk);
+			Keybind("KEY 011", &m_cfg.misc.slow_key, &m_cfg.misc.slow_key_mod);
+			ImGui::SliderFloat("SLowwalk speed", &m_cfg.misc.slowwalk_value, 0.f, 100.f);
+
+
+			ImGui::Combo("Hitsound ", &m_cfg.misc.hitsound, Hit, ARRAYSIZE(Hit));
+
+		}
+		ImGui::EndChild();
+	}
+	ui::EndGroupBox();
+
+
+}
+
 void c(){
 	static std::string selected_cfg = "";
 	static char cfg_name[32];
@@ -919,10 +965,10 @@ void c_menu::on_paint() {
 			aa();
         }
         else if (active_sidebar_tab == TAB_ESP) {
-
+			v();
         }
         else if (active_sidebar_tab == TAB_MISC) {
-
+			m();
         }
         else if (active_sidebar_tab == TAB_CONFIG) {
 			c();

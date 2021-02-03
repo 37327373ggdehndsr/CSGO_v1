@@ -363,15 +363,9 @@ public:
 
 	struct
 	{
-		float view_fov;
-		float fov_changer;
+
+
 	} other;
-
-	struct
-	{
-
-
-	} world_light;
 
 	struct
 	{
@@ -379,24 +373,6 @@ public:
 
 	} modulate_world;
 
-	struct
-	{
-
-
-	} world_items;
-
-	struct
-	{
-
-
-
-	} colors;
-
-	struct
-	{
-
-
-	} removals;
 
 	struct
 	{

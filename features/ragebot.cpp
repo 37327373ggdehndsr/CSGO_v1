@@ -780,7 +780,9 @@ void c_ragebot::Run() {
 		movement->auto_stop();
 
 		bool htchance = Hitchance(current_aim_position, false, best_anims, hitbox);
-		bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && Hitchance(current_aim_position, false, best_anims, hitbox));
+		
+		//bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
+		bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
 
 		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));		
 
@@ -793,7 +795,7 @@ void c_ragebot::Run() {
 			}
 
 			// hitchance fail.
-			else if (m_cfg.ragebot.autoscope == 2 && htchance && !hit) {
+			else if (m_cfg.ragebot.autoscope == 2 && cfg.hitchance && !hit) {
 				globals::m_cmd->m_buttons |= IN_ATTACK2;
 				return;
 			}
@@ -813,7 +815,9 @@ void c_ragebot::Run() {
 					shoot_next_tick = false;
 
 				globals::m_cmd->m_view_angles = math::calc_angle(globals::m_local->get_eye_position(), current_aim_position) - globals::m_local->get_aim_punch_angle() * 2.f;
-				globals::m_cmd->m_tick_count = TIME_TO_TICKS(best_anims->sim_time + best_anims->calculate_lerp());
+				
+				if(m_record) /// заменить все best_anims на m_record , потом 
+					globals::m_cmd->m_tick_count = TIME_TO_TICKS(m_record->sim_time + m_record->calculate_lerp());
 
 				if (!shoot_next_tick && globals::ragebot::m_goal_shift == 13 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready)) {
 					shoot_next_tick = true;

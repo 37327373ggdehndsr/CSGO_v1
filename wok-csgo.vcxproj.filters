@@ -259,4 +259,10 @@
     <ClInclude Include="features\resolver.h" />
     <ClInclude Include="features\tickbase.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="hooks\lib\detours.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hooks\lib\detours.pdb" />
+  </ItemGroup>
 </Project>

@@ -30,6 +30,7 @@ public:
 	animation* target_anims;
 	animation* anims = nullptr;
 	animation* best_anims = nullptr;
+	animation* m_record;
 	vec3_t minus_origin = vec3_t(0, 0, 0);
 	vec3_t current_aim_position;
 	vec3_t current_aim_player_origin;

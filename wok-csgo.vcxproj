@@ -260,6 +260,12 @@
     <ClInclude Include="utils\render\ui.h" />
     <ClInclude Include="utils\utils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="hooks\lib\detours.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="hooks\lib\detours.pdb" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
