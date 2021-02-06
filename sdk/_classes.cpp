@@ -65,6 +65,11 @@ bool c_base_combat_weapon::is_gun( )
 	}
 }
 
+bool c_cs_player::is_local_player()
+{
+	return get_index() == interfaces::engine->get_local_player();
+}
+
 bool c_base_entity::is_enemy( )
 {
 	if ( this == globals::m_local )

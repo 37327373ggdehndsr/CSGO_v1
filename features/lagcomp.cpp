@@ -142,10 +142,9 @@ void c_animations::update_players()
 		if (entity->get_index() == local->get_index())
 			continue;
 
-		if (!entity->is_enemy() && !entity->m_bIsLocalPlayer()) {
+		if (!entity->is_enemy() && !entity->is_local_player())
 			globals::m_call_client_update_enemy = entity->get_client_side_animation() = true;
-			continue;
-		}
+
 
 		if (animation_infos.find(entity->get_handle().to_int()) == animation_infos.end())
 			animation_infos.insert_or_assign(entity->get_handle().to_int(), animation_info(entity, { }));
