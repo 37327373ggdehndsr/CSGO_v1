@@ -163,13 +163,15 @@ void hvh::adjustyaw() {
 void hvh::sendpacket(bool& send) {
 	bool lag = false;
 	int m_value = (int)m_cfg.misc.lag_value;
+	auto weapon = globals::m_local->get_active_weapon();
+
 
 	auto m_time_tick = ((int)(1.0f / interfaces::global_vars->m_interval_per_tick)) / 64;
 	bool active = m_cfg.misc.lag_enablers[0] || m_cfg.misc.lag_enablers[1] || m_cfg.misc.lag_enablers[2] || m_cfg.misc.lag_enablers[3];
 	int m_choke = 0.f;
 
 	bool is_antiaim = m_cfg.ragebot.enabled && m_cfg.antiaim.fake > 0;
-	bool is_act_dt = m_cfg.ragebot.enabled && m_cfg.ragebot.main.enabled && GetKeyState(m_cfg.ragebot.main.exploit_key);
+	bool is_act_dt = m_cfg.ragebot.enabled && m_cfg.ragebot.main.enabled && GetKeyState(m_cfg.ragebot.main.exploit_key && weapon->get_item_definition_index() == WEAPONTYPE_KNIFE && weapon->get_item_definition_index() == WEAPONTYPE_GRENADE && weapon->get_item_definition_index() == WEAPONTYPE_C4 && weapon->get_item_definition_index() == WEAPON_R8_REVOLVER);
 	bool is_dt = is_act_dt || tickbase->m_shift_data.m_should_attempt_shift && ((!tickbase->m_shift_data.m_should_be_ready && tickbase->m_shift_data.m_prepare_recharge) || tickbase->m_shift_data.m_needs_recharge || tickbase->m_shift_data.m_should_be_ready) && !g_hvh->m_in_duck;
 
 	auto wpn = globals::m_local->get_active_weapon();
@@ -215,14 +217,14 @@ void hvh::sendpacket(bool& send) {
 			if (m_value < 1)
 			{
 				if (is_antiaim)
-					send = interfaces::client_state->m_net_channel->m_choked_packets >= 1;
+					send = interfaces::client_state->m_net_channel->m_choked_packets >= 2;
 			}
 			else
 				send = interfaces::client_state->m_net_channel->m_choked_packets >= m_choke;
 		}
 
 		else if (is_dt && !g_hvh->m_in_duck)
-			send = interfaces::client_state->m_net_channel->m_choked_packets >= 1;
+			send = interfaces::client_state->m_net_channel->m_choked_packets >= 2;
 
 		else if (g_hvh->m_in_duck)
 			send = interfaces::client_state->m_net_channel->m_choked_packets >= 14;
@@ -230,7 +232,7 @@ void hvh::sendpacket(bool& send) {
 	else
 	{
 		if (is_antiaim && !is_dt && !g_hvh->m_in_duck)
-			send = interfaces::client_state->m_net_channel->m_choked_packets >= 1;
+			send = interfaces::client_state->m_net_channel->m_choked_packets >= 2;
 	}
 }
 
@@ -256,5 +258,4 @@ float hvh::corrected_tickbase(){
 	last_ucmd = globals::m_cmd;
 	float corrected_curtime = corrected_tickbase * interfaces::global_vars->m_interval_per_tick;
 	return corrected_curtime;
-
 }

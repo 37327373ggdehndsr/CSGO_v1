@@ -389,6 +389,17 @@ public:
 		}
 	}
 
+	//bool m_bIsLocalPlayer() {
+	//	static auto IsLocalPlayer = *(size_t*)(memory::pattern("client.dll", "74 ? 8A 83 ? ? ? ? 88") + 0x4);
+	//	return *(bool*)((size_t)this + IsLocalPlayer);
+	//
+
+	//}
+
+	__forceinline bool m_bIsLocalPlayer() {
+		return get< bool >(memory::pattern("client.dll", "74 ? 8A 83 ? ? ? ? 88") + 0x4);
+	}
+
 	void reset_animation_state( c_anim_state* state )
 	{
 		using ResetAnimState_t = void( __thiscall* )( c_anim_state* );

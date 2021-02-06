@@ -234,7 +234,7 @@ void c_animations::animation_info::m_update_player( c_cs_player* pEnt )
 	interfaces::global_vars->m_cur_time = curtime;
 }
 
-void c_animations::manage_local_animations( )
+void c_animations::manage_local_animations( ) //v3 it's u ?
 {
 	// get player anim state.
 	c_anim_state* const state = globals::m_local->get_anim_state();

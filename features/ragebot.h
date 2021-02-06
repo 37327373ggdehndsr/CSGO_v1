@@ -4,53 +4,50 @@
 struct tick_record;
 class aim_data{
 public:
-	c_cs_player* m_player;
-	std::string hitbox_where_shot;
-	std::string m_resolver;
+	c_cs_player*	m_player;
+	std::string		hitbox_where_shot;
+	std::string		m_resolver;
 public:
-	float m_time;
-	float m_first_processed_time;
-	bool m_weapon_fire, m_bullet_impact;
-	int m_hitgroup_hit;
-	int m_damage;
-	int m_hitbox;
+	float			m_time;
+	float			m_first_processed_time;
+	bool			m_weapon_fire, m_bullet_impact;
+	int				m_hitgroup_hit;
+	int				m_damage;
+	int				m_hitbox;
 public:
-	animation* m_record;
-	qangle_t m_eye_angles;
-	vec3_t impact, start;
-	int backtrack;
-	matrix3x4_t* matrix;
+	animation*		m_record;
+	qangle_t		m_eye_angles;
+	vec3_t			impact, start;
+	int				backtrack;
+	matrix3x4_t*	matrix;
 };
 
 class c_ragebot : public c_singleton<c_ragebot> {
 public:
-	matrix3x4_t BoneMatrix[128];
-	animation   backup_anims[65];
-	std::vector<aim_data> m_aim_data;
-	animation* target_anims;
-	animation* anims = nullptr;
-	animation* best_anims = nullptr;
-	animation* m_record;
-	vec3_t minus_origin = vec3_t(0, 0, 0);
-	vec3_t current_aim_position;
-	vec3_t current_aim_player_origin;
-	clock_t last_shot_tick;
-	qangle_t last_shot_angle;
+	matrix3x4_t				BoneMatrix[128];
+	animation				backup_anims[65];
+	animation*				m_record;
+	std::vector<aim_data>	m_aim_data;
+	vec3_t minus_origin =	vec3_t(0, 0, 0);
+	vec3_t					current_aim_position;
+	vec3_t					current_aim_player_origin;
+	clock_t					last_shot_tick;
+	qangle_t				last_shot_angle;
 public:
-	float best_distance;
-	float m_sim_time = 0;
-	float current_aim_simulation_time;
+	float					best_distance;
+	float					m_sim_time = 0;
+	float					current_aim_simulation_time;
 public:
-	int box;
-	int hitbox = -1;
-	int target_index = -1;
+	int						box;
+	int						hitbox = -1;
+	int						target_index = -1;
 public:
-	bool did_dt;
-	bool fired_in_that_tick;
-	bool shoot_next_tick;
-	bool last_tick_shooted;
-	bool target_lethal;
-	bool m_shot;
+	bool					did_dt;
+	bool					fired_in_that_tick;
+	bool					shoot_next_tick;
+	bool					last_tick_shooted;
+	bool					target_lethal;
+	bool					m_shot;
 public:
 	struct {
 		float damage;

@@ -67,16 +67,16 @@ int c_ragebot::get_current_priority_hitbox(c_cs_player* pEntity) {
 	bool can_baim_on_miss = globals::ragebot::m_missed_shots >= 2;
 
 	if (can_baim_on_miss)
-		return (int)2;
+		return (int)HITBOX_PELVIS;
 
 	if (cfg.baim_air && !(pEntity->get_flags() & FL_ONGROUND))
-		return (int)2;
+		return (int)HITBOX_PELVIS;
 
 	if ((pEntity->get_health() <= cfg.baim_hp_lower))
-		return (int)2;
+		return (int)HITBOX_PELVIS;
 
 	if (m_cfg.ragebot.other.baim && GetKeyState(m_cfg.ragebot.other.baim_key) || m_cfg.ragebot.other.baim && m_cfg.ragebot.other.baim_key == -1)
-		return (int)2;
+		return (int)HITBOX_PELVIS;
 
 	return 0;
 }
@@ -114,54 +114,54 @@ vec3_t c_ragebot::head_scan(animation* anims, int& hitbox, float& best_damage, f
 std::vector<int> c_ragebot::get_hitboxes_to_scan(c_cs_player* pEntity) {
 	std::vector< int > hitboxes;
 
-	if (get_current_priority_hitbox(pEntity) == (int)2) {
+	if (get_current_priority_hitbox(pEntity) == (int)HITBOX_PELVIS) {
 		if (cfg.m_hitboxes.chest)
-			hitboxes.push_back((int)5);
+			hitboxes.push_back((int)HITBOX_CHEST);
 
 		if (cfg.m_hitboxes.chest)
-			hitboxes.push_back((int)3);
+			hitboxes.push_back((int)HITBOX_STOMACH);
 
 		if (cfg.m_hitboxes.pelvis)
-			hitboxes.push_back((int)2);
+			hitboxes.push_back((int)HITBOX_PELVIS);
 
 		return hitboxes;
 	}
 
 	if (cfg.m_hitboxes.head)
-		hitboxes.push_back((int)0);
+		hitboxes.push_back((int)HITBOX_HEAD);
 
 	if (cfg.m_hitboxes.neck)
-		hitboxes.push_back((int)1);
+		hitboxes.push_back((int)HITBOX_NECK);
 
 	if (cfg.m_hitboxes.upper_chest)
-		hitboxes.push_back((int)6);
+		hitboxes.push_back((int)HITBOX_UPPER_CHEST);
 
 	if (cfg.m_hitboxes.chest)
-		hitboxes.push_back((int)5);
+		hitboxes.push_back((int)HITBOX_CHEST);
 
 	if (cfg.m_hitboxes.stomach)
-		hitboxes.push_back((int)3);
+		hitboxes.push_back((int)HITBOX_STOMACH);
 
 	if (cfg.m_hitboxes.pelvis)
-		hitboxes.push_back((int)2);
+		hitboxes.push_back((int)HITBOX_PELVIS);
 
 	if (cfg.m_hitboxes.arms) {
-		hitboxes.push_back((int)14);
-		hitboxes.push_back((int)13);
-		hitboxes.push_back((int)18);
-		hitboxes.push_back((int)16);
-		hitboxes.push_back((int)17);
-		hitboxes.push_back((int)15);
+		hitboxes.push_back((int)HITBOX_HAND_LEFT);
+		hitboxes.push_back((int)HITBOX_HAND_RIGHT);
+		hitboxes.push_back((int)HITBOX_FOREARM_LEFT);
+		hitboxes.push_back((int)HITBOX_FOREARM_RIGHT);
+		hitboxes.push_back((int)HITBOX_UPPER_ARM_LEFT);
+		hitboxes.push_back((int)HITBOX_UPPER_ARM_RIGHT);
 	}
 
 	if (cfg.m_hitboxes.legs) {
-		hitboxes.push_back((int)10);
-		hitboxes.push_back((int)9);
+		hitboxes.push_back((int)HITBOX_CALF_LEFT);
+		hitboxes.push_back((int)HITBOX_CALF_RIGHT);
 	}
 
 	if (cfg.m_hitboxes.feet) {
-		hitboxes.push_back((int)12);
-		hitboxes.push_back((int)11);
+		hitboxes.push_back((int)HITBOX_FOOR_LEFT);
+		hitboxes.push_back((int)HITBOX_FOOR_RIGHT);
 	}
 
 	return hitboxes;
@@ -237,9 +237,9 @@ std::vector<vec3_t> c_ragebot::get_multipoints(c_cs_player* pBaseEntity, int iHi
 	if (pBaseEntity->get_velocity().length() > 300.f && iHitbox > 0)
 		point_scale = 0.f;
 	else {
-		if (iHitbox <= (int)1)
+		if (iHitbox <= (int)HITBOX_NECK)
 			point_scale = cfg.head_scale / 100.f;
-		else if (iHitbox <= (int)7)
+		else if (iHitbox <= (int)HITBOX_THING_RIGHT)
 			point_scale = cfg.body_scale / 100.f;
 	}
 
@@ -259,37 +259,37 @@ std::vector<vec3_t> c_ragebot::get_multipoints(c_cs_player* pBaseEntity, int iHi
 	vec3_t right = forward.cross_product(vec3_t(0, 0, 1));
 	vec3_t left = vec3_t(-right.x, -right.y, right.z);
 
-	if (iHitbox == 0) {
+	if (iHitbox == (int)HITBOX_HEAD) {
 		for (auto i = 0; i < 4; ++i)
 			points.push_back(center);
 			points[1].x += untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near left ear
 			points[2].x -= untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near right ear
 			points[3].z += untransformedBox->m_radius * point_scale - 0.05f; // forehead
 	}
-	else if (iHitbox == (int)1)
+	else if (iHitbox == (int)HITBOX_NECK)
 		points.push_back(center);
-	else if (iHitbox == (int)7 || iHitbox == (int)8 || iHitbox == (int)9
-		|| iHitbox == (int)10 || iHitbox == (int)11 || iHitbox == (int)12) {
-		if (iHitbox == (int)7 ||
-			iHitbox == (int)8) {
+	else if (iHitbox == (int)HITBOX_THING_RIGHT || iHitbox == (int)HITBOX_THING_LEFT || iHitbox == (int)HITBOX_CALF_RIGHT
+		|| iHitbox == (int)HITBOX_CALF_LEFT || iHitbox == (int)HITBOX_FOOR_RIGHT || iHitbox == (int)HITBOX_FOOR_LEFT) {
+		if (iHitbox == (int)HITBOX_THING_RIGHT ||
+			iHitbox == (int)HITBOX_THING_LEFT) {
 			points.push_back(center);
 		}
-		else if (iHitbox == (int)9 ||
-			iHitbox == (int)10) {
+		else if (iHitbox == (int)HITBOX_CALF_RIGHT ||
+			iHitbox == (int)HITBOX_CALF_LEFT) {
 			points.push_back(center);
 		}
-		else if (iHitbox == (int)11 ||
-			iHitbox == (int)12) {
+		else if (iHitbox == (int)HITBOX_FOOR_RIGHT ||
+			iHitbox == (int)HITBOX_FOOR_LEFT) {
 			points.push_back(center);
 			points[0].z += 5.f;
 		}
 	}
-	else if (iHitbox == (int)13 ||
-		iHitbox == (int)14 ||
-		iHitbox == (int)15 ||
-		iHitbox == (int)16 ||
-		iHitbox == (int)17 ||
-		iHitbox == (int)18) {
+	else if (iHitbox == (int)HITBOX_HAND_RIGHT ||
+		iHitbox == (int)HITBOX_HAND_LEFT ||
+		iHitbox == (int)HITBOX_UPPER_ARM_RIGHT ||
+		iHitbox == (int)HITBOX_FOREARM_RIGHT ||
+		iHitbox == (int)HITBOX_UPPER_ARM_LEFT ||
+		iHitbox == (int)HITBOX_FOREARM_LEFT) {
 		points.push_back(center);
 	}
 	else {
@@ -317,12 +317,12 @@ vec3_t c_ragebot::primary_scan(animation* anims, int& hitbox, float& simtime, fl
 		min_dmg = health + 1;
 
 	static const std::vector<int> hitboxes = {
-		(int)0,
-		(int)5,
-		(int)3,
-		(int)2,
-		(int)10,
-		(int)9,
+		(int)HITBOX_HEAD,
+		(int)HITBOX_CHEST,
+		(int)HITBOX_STOMACH,
+		(int)HITBOX_PELVIS,
+		(int)HITBOX_CALF_LEFT,
+		(int)HITBOX_CALF_RIGHT,
 	};
 
 	for (auto HitboxID : hitboxes) {
@@ -362,16 +362,16 @@ vec3_t c_ragebot::full_scan(animation* anims, int& hitbox, float& simtime, float
 	auto hitboxes = get_hitboxes_to_scan(anims->player);
 
 	static const std::vector<int> upper_hitboxes = {
-		(int)0,
-		(int)1,
-		(int)6,
-		(int)5,
+		(int)HITBOX_HEAD,
+		(int)HITBOX_NECK,
+		(int)HITBOX_UPPER_CHEST,
+		(int)HITBOX_CHEST,
 	};
 
 	static const std::vector<int> baim_hitboxes = {
-		(int)5,
-		(int)3,
-		(int)2,
+		(int)HITBOX_CHEST,
+		(int)HITBOX_STOMACH,
+		(int)HITBOX_PELVIS,
 	};
 
 	bool can_shift = m_cfg.ragebot.main.highrise_accuracy_dt && m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0 && GetKeyState(m_cfg.ragebot.main.exploit_key);
@@ -755,34 +755,32 @@ void c_ragebot::Run() {
 
 		target_lethal = false;
 
-		vec3_t aim_position = get_aim_vector(pEntity, m_sim_time, minus_origin, anims, box);
+		vec3_t aim_position = get_aim_vector(pEntity, m_sim_time, minus_origin, m_record, box);
 
-		if (!anims)
+		if (!m_record)
 			continue;
 
 		int health = pEntity->get_health();
 		if (best_distance > health
-			&& anims->player == pEntity && aim_position != vec3_t(0, 0, 0)) {
+			&& m_record->player == pEntity && aim_position != vec3_t(0, 0, 0)) {
 			best_distance = health;
 			target_index = i;
 			current_aim_position = aim_position;
 			current_aim_simulation_time = m_sim_time;
 			current_aim_player_origin = minus_origin;
-			best_anims = anims;
 			hitbox = box;
-			target_anims = best_anims;
 		}
 	}
 
 	did_dt = false;
 
-	if (hitbox != -1 && target_index != -1 && best_anims && current_aim_position != vec3_t(0, 0, 0)) {
+	if (hitbox != -1 && target_index != -1 && m_record && current_aim_position != vec3_t(0, 0, 0)) {
 		movement->auto_stop();
 
-		bool htchance = Hitchance(current_aim_position, false, best_anims, hitbox);
+		bool htchance = Hitchance(current_aim_position, false, m_record, hitbox);
 		
-		//bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
-		bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
+        bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
+	//	bool hit = (weapon->get_item_definition_index() == 40 && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
 
 		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));		
 
@@ -825,7 +823,7 @@ void c_ragebot::Run() {
 
 				last_shot_angle = globals::m_cmd->m_view_angles;
 				aim_data data;
-				data.m_player = best_anims->player;
+				data.m_player = m_record->player;
 				data.hitbox_where_shot = _("none");
 				data.m_resolver = "";
 				data.m_time = interfaces::global_vars->m_interval_per_tick * globals::m_local->get_tick_base();
@@ -835,10 +833,10 @@ void c_ragebot::Run() {
 				data.m_damage = -1;
 				data.start = globals::m_local->get_eye_position();
 				data.m_hitgroup_hit = -1;
-				data.backtrack = TIME_TO_TICKS(fabsf(best_anims->player->get_sim_time() - current_aim_simulation_time));
-				data.m_eye_angles = best_anims->player->get_eye_angles();
+				data.backtrack = TIME_TO_TICKS(fabsf(m_record->player->get_sim_time() - current_aim_simulation_time));
+				data.m_eye_angles = m_record->player->get_eye_angles();
 				data.m_hitbox = hitbox;
-				data.m_record = best_anims;
+				data.m_record = m_record;
 				m_aim_data.push_back(data);
 				m_shot = true;
 				last_shot_tick = clock();
