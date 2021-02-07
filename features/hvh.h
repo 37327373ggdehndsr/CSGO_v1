@@ -15,6 +15,6 @@ public:
     void sendpacket(bool& send);
     void fakeduck();
     float corrected_tickbase();
-    bool m_in_duck;
+    bool  m_in_duck;
 };
 #define g_hvh hvh::instance()

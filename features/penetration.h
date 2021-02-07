@@ -3,13 +3,13 @@
 
 struct ReturnInfo_t
 {
-	int m_damage;
-	int m_hitgroup;
-	int m_penetration_count;
-	bool m_did_penetrate_wall;
-	float m_thickness;
-	vec3_t m_end;
-	c_cs_player* m_hit_entity;
+	int				m_damage;
+	int				m_hitgroup;
+	int				m_penetration_count;
+	bool			m_did_penetrate_wall;
+	float			m_thickness;
+	vec3_t			m_end;
+	c_cs_player*	m_hit_entity;
 
 	ReturnInfo_t( int damage, int hitgroup, int penetration_count, bool did_penetrate_wall, float thickness, c_cs_player* hit_entity )
 	{
@@ -28,17 +28,17 @@ private:
 
 	struct FireBulletData_t
 	{
-		vec3_t m_start;
-		vec3_t m_end;
-		vec3_t m_current_position;
-		vec3_t m_direction;
+		vec3_t				 m_start;
+		vec3_t				 m_end;
+		vec3_t				 m_current_position;
+		vec3_t				 m_direction;
 
-		c_trace_filter* m_filter;
-		c_game_trace m_enter_trace;
+		c_trace_filter*		 m_filter;
+		c_game_trace		 m_enter_trace;
 
-		float m_thickness;
-		float m_current_damage;
-		int m_penetration_count;
+		float				 m_thickness;
+		float				 m_current_damage;
+		int					 m_penetration_count;
 	};
 
 	void scale_damage( c_cs_player* e, c_cs_weapon_data* weapon_info, int hitgroup, float& current_damage );
@@ -51,7 +51,7 @@ private:
 	float hitgroup_damage( int iHitGroup );
 
 public:
-	std::vector<float> scanned_damage;
+	std::vector<float>	scanned_damage;
 	std::vector<vec3_t> scanned_points;
 
 	void reset( )

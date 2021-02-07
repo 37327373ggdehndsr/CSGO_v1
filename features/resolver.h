@@ -3,10 +3,10 @@
 
 class resolver : public c_singleton<resolver> {
 public:
-	bool is_extended;
+	bool		is_extended;
 public:
-	float m_delta;
-	float m_last_resolve;
+	float		m_delta;
+	float		m_last_resolve;
 public:
 	void resolve_yaw(animation* record);
 	float resolve_shot( animation* anim);

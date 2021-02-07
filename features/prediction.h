@@ -5,11 +5,11 @@ class c_prediction : public c_singleton<c_prediction> {
 public:
 	class StoredData_t {
 	public:
-		int    m_tickbase;
-		qangle_t  m_punch;
-		vec3_t  m_punch_vel;
-		vec3_t m_view_offset;
-		float  m_velocity_modifier;
+		int			 m_tickbase;
+		qangle_t	 m_punch;
+		vec3_t		 m_punch_vel;
+		vec3_t		 m_view_offset;
+		float		 m_velocity_modifier;
 
 	public:
 		__forceinline StoredData_t() : m_tickbase{ }, m_punch{ }, m_punch_vel{ }, m_view_offset{ }, m_velocity_modifier{ } {};
@@ -17,14 +17,14 @@ public:
 	std::array< StoredData_t, MULTIPLAYER_BACKUP > m_data;
 private:
 	struct {
-		float m_cur_time, m_frame_time;
-		bool m_in_prediction, m_first_time_predicted;
+		float		 m_cur_time, m_frame_time;
+		bool		 m_in_prediction, m_first_time_predicted;
 	} m_backup;
 
-	c_move_data* m_move_data;
+	c_move_data*	 m_move_data;
 
-	int* m_player;
-	int* m_random_seed;
+	int*			 m_player;
+	int*			 m_random_seed;
 
 	void post_think( c_cs_player* player )
 	{

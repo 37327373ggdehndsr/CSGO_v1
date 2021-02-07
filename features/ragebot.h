@@ -2,7 +2,7 @@
 #include "../globals.h"
 
 struct tick_record;
-class aim_data{
+class aim_data {
 public:
 	c_cs_player*	m_player;
 	std::string		hitbox_where_shot;
@@ -26,19 +26,20 @@ class c_ragebot : public c_singleton<c_ragebot> {
 public:
 	matrix3x4_t				BoneMatrix[128];
 	animation				backup_anims[65];
-	animation*				m_record;
-	std::vector<aim_data>	m_aim_data;
-	vec3_t minus_origin =	vec3_t(0, 0, 0);
+	animation*				m_animate = nullptr;
+	animation*				m_record = nullptr;
+	vec3_t					minus_origin = vec3_t(0, 0, 0);
 	vec3_t					current_aim_position;
 	vec3_t					current_aim_player_origin;
 	clock_t					last_shot_tick;
 	qangle_t				last_shot_angle;
+	std::vector<aim_data>	m_aim_data;
 public:
 	float					best_distance;
 	float					m_sim_time = 0;
 	float					current_aim_simulation_time;
 public:
-	int						box;
+	int						m_hitboxes;
 	int						hitbox = -1;
 	int						target_index = -1;
 public:

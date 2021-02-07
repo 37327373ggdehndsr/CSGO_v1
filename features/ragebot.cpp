@@ -37,7 +37,6 @@ void c_ragebot::update_config() {
 
 	cfg.damage = m_cfg.ragebot.configurations.flt_custom_min_damage[element];
 	cfg.hitchance = m_cfg.ragebot.configurations.flt_custom_hitchance[element];
-	cfg.dt_hitchance = m_cfg.ragebot.configurations.flt_custom_dt_hitchance[element];
 	cfg.m_hitboxes.head = m_cfg.ragebot.configurations.hitboxes.enabled[0][element];
 	cfg.m_hitboxes.neck = m_cfg.ragebot.configurations.hitboxes.enabled[1][element];
 	cfg.m_hitboxes.upper_chest = m_cfg.ragebot.configurations.hitboxes.enabled[2][element];
@@ -262,9 +261,9 @@ std::vector<vec3_t> c_ragebot::get_multipoints(c_cs_player* pBaseEntity, int iHi
 	if (iHitbox == (int)HITBOX_HEAD) {
 		for (auto i = 0; i < 4; ++i)
 			points.push_back(center);
-			points[1].x += untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near left ear
-			points[2].x -= untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near right ear
-			points[3].z += untransformedBox->m_radius * point_scale - 0.05f; // forehead
+		points[1].x += untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near left ear
+		points[2].x -= untransformedBox->m_radius * math::clamp(0.f, point_scale - 0.2f, 0.87f); // near right ear
+		points[3].z += untransformedBox->m_radius * point_scale - 0.05f; // forehead
 	}
 	else if (iHitbox == (int)HITBOX_NECK)
 		points.push_back(center);
@@ -295,8 +294,8 @@ std::vector<vec3_t> c_ragebot::get_multipoints(c_cs_player* pBaseEntity, int iHi
 	else {
 		for (auto i = 0; i < 3; ++i)
 			points.push_back(center);
-			points[1] += right * (untransformedBox->m_radius * point_scale);
-			points[2] += left * (untransformedBox->m_radius * point_scale);
+		points[1] += right * (untransformedBox->m_radius * point_scale);
+		points[2] += left * (untransformedBox->m_radius * point_scale);
 	}
 
 	return points;
@@ -447,7 +446,7 @@ vec3_t c_ragebot::get_aim_vector(c_cs_player* pTarget, float& simtime, vec3_t& o
 
 	float m_damage = cfg.damage;
 
-	auto latest_animation = g_animations->get_latest_animation(pTarget);	
+	auto latest_animation = g_animations->get_latest_animation(pTarget);
 	auto record = latest_animation;
 	if (!record.has_value() || !record.value()->player)
 		return vec3_t(0, 0, 0);
@@ -703,13 +702,15 @@ float hitchance()
 bool c_ragebot::Hitchance(vec3_t Aimpoint, bool backtrack, animation* best, int& hitbox)
 {
 	bool r8 = globals::m_local->get_active_weapon()->get_item_definition_index() == 64;
+	bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift);
 
-	if(m_cfg.ragebot.main.enabled && m_cfg.ragebot.main.exploit_type == 0 && m_cfg.ragebot.main.exploit_key)
-		return HitTraces(best, Aimpoint, cfg.dt_hitchance / 100.f, hitbox);
-	else if (r8)
+
+	if (r8)
 		return hitchance() > cfg.hitchance * (1.7 * (1.f - r8));
-	else if (!m_cfg.ragebot.main.exploit_key || !m_cfg.ragebot.main.enabled || m_cfg.ragebot.main.exploit_type == 1)
+	else
 		return HitTraces(best, Aimpoint, cfg.hitchance / 100.f, hitbox);
+
+
 }
 
 void c_ragebot::Run() {
@@ -733,7 +734,7 @@ void c_ragebot::Run() {
 
 		if (pEntity->get_index() == globals::m_local->get_index())
 			continue;
-		
+
 		if (pEntity->get_health() <= 0 && pEntity->is_dormant() && pEntity->is_immune() && !pEntity->is_alive())
 			continue;
 
@@ -755,34 +756,34 @@ void c_ragebot::Run() {
 
 		target_lethal = false;
 
-		vec3_t aim_position = get_aim_vector(pEntity, m_sim_time, minus_origin, m_record, box);
+		vec3_t aim_position = get_aim_vector(pEntity, m_sim_time, minus_origin, m_animate, m_hitboxes);
 
-		if (!m_record)
+		if (!m_animate)
 			continue;
 
 		int health = pEntity->get_health();
 		if (best_distance > health
-			&& m_record->player == pEntity && aim_position != vec3_t(0, 0, 0)) {
+			&& m_animate->player == pEntity && aim_position != vec3_t(0, 0, 0)) {
 			best_distance = health;
 			target_index = i;
 			current_aim_position = aim_position;
 			current_aim_simulation_time = m_sim_time;
 			current_aim_player_origin = minus_origin;
-			hitbox = box;
+			m_record = m_animate;
+			hitbox = m_hitboxes;
 		}
 	}
 
-	did_dt = false;
 
 	if (hitbox != -1 && target_index != -1 && m_record && current_aim_position != vec3_t(0, 0, 0)) {
 		movement->auto_stop();
 
 		bool htchance = Hitchance(current_aim_position, false, m_record, hitbox);
-		
-        bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
-	//	bool hit = (weapon->get_item_definition_index() == 40 && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
 
-		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));		
+		bool hit = (!globals::m_local->get_anim_state()->m_on_ground && weapon->get_item_definition_index() == 40 && weapon && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
+		//	bool hit = (weapon->get_item_definition_index() == 40 && weapon->get_inaccuracy() < 0.009f) || (cfg.hitchance && htchance);
+
+		bool conditions = !tickbase->m_shift_data.m_should_attempt_shift || ((!m_cfg.ragebot.main.wait_charge || globals::ragebot::m_goal_shift == 13 || tickbase->m_shift_data.m_should_disable) && tickbase->m_shift_data.m_should_attempt_shift) || (m_cfg.ragebot.main.wait_charge && globals::ragebot::m_goal_shift == 7 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready));
 
 		bool can_scope = weapon && weapon->get_zoom_level() == 0 && weapon->is_zoomable(true);
 		if (can_scope) {
@@ -798,23 +799,23 @@ void c_ragebot::Run() {
 				return;
 			}
 		}
-		
-		if (conditions  && htchance && m_is_able_to_shoot) {
+
+		if (conditions && htchance && m_is_able_to_shoot) {
 			if (!g_hvh->m_in_duck)
 				globals::m_packet = true;
 
 			globals::m_cmd->m_buttons |= IN_ATTACK;
 		}
 
-		if (conditions  && htchance && m_is_able_to_shoot) {
+		if (conditions && htchance && m_is_able_to_shoot) {
 			if (globals::m_cmd->m_buttons & IN_ATTACK) {
 
 				if (shoot_next_tick)
 					shoot_next_tick = false;
 
 				globals::m_cmd->m_view_angles = math::calc_angle(globals::m_local->get_eye_position(), current_aim_position) - globals::m_local->get_aim_punch_angle() * 2.f;
-				
-				if(m_record) /// заменить все best_anims на m_record , потом 
+
+				if (m_record) /// заменить все best_anims на m_record , потом 
 					globals::m_cmd->m_tick_count = TIME_TO_TICKS(m_record->sim_time + m_record->calculate_lerp());
 
 				if (!shoot_next_tick && globals::ragebot::m_goal_shift == 13 && tickbase->m_shift_data.m_should_attempt_shift && !(tickbase->m_shift_data.m_prepare_recharge || tickbase->m_shift_data.m_did_shift_before && !tickbase->m_shift_data.m_should_be_ready)) {

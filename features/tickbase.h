@@ -13,7 +13,7 @@ public:
 
 		bool m_did_shift_before;
 		bool m_should_attempt_shift;
-		int m_needs_recharge;
+		int	 m_needs_recharge;
 		bool m_prepare_recharge;
 		bool m_should_be_ready;
 		bool m_can_shift_tickbase;

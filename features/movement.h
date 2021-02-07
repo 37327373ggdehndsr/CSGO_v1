@@ -10,14 +10,14 @@ public:
 	void mouse_correct( c_user_cmd* cmd );
 
 	void slow_walk( );
-	bool m_in_slowwalk;
+	bool	m_in_slowwalk;
 
 	int get_ticks_to_shoot();
 	int get_ticks_to_stop();
 	void fast_stop();
 	bool m_cock_revolver();
 	void auto_stop();
-	bool m_stop_slide;
+	bool	m_stop_slide;
 
 };
 
