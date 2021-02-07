@@ -136,6 +136,9 @@
     <ClCompile Include="features\tickbase.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="features\chams.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common_includes.h" />
@@ -258,6 +261,7 @@
     <ClInclude Include="features\ragebot.h" />
     <ClInclude Include="features\resolver.h" />
     <ClInclude Include="features\tickbase.h" />
+    <ClInclude Include="features\chams.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="hooks\lib\detours.lib" />

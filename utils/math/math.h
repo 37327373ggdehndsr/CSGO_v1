@@ -18,6 +18,10 @@ namespace math {
 		return value;
 	}
 
+	void  VectorAngles(const vec3_t& forward, qangle_t& angles, vec3_t* up = nullptr);
+	void  AngleVectors(const qangle_t& angles, vec3_t* forward, vec3_t* right = nullptr, vec3_t* up = nullptr);
+	float GetFOV(const qangle_t& view_angles, const vec3_t& start, const vec3_t& end);
+
 	float segment_to_segment(const vec3_t s1, const vec3_t s2, const vec3_t k1, const vec3_t k2);
 
 	void ang_vec_mult(const vec3_t angles, vec3_t& forward, vec3_t& right, vec3_t& up);

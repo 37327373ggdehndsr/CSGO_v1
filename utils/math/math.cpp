@@ -17,6 +17,85 @@ namespace math {
 		return yaw;
 	}
 
+	void AngleVectors(const qangle_t& angles, vec3_t* forward, vec3_t* right, vec3_t* up) {
+		float cp = std::cos(DEG2RAD(angles.x)), sp = std::sin(DEG2RAD(angles.x));
+		float cy = std::cos(DEG2RAD(angles.y)), sy = std::sin(DEG2RAD(angles.y));
+		float cr = std::cos(DEG2RAD(angles.z)), sr = std::sin(DEG2RAD(angles.z));
+
+		if (forward) {
+			forward->x = cp * cy;
+			forward->y = cp * sy;
+			forward->z = -sp;
+		}
+
+		if (right) {
+			right->x = -1.f * sr * sp * cy + -1.f * cr * -sy;
+			right->y = -1.f * sr * sp * sy + -1.f * cr * cy;
+			right->z = -1.f * sr * cp;
+		}
+
+		if (up) {
+			up->x = cr * sp * cy + -sr * -sy;
+			up->y = cr * sp * sy + -sr * cy;
+			up->z = cr * cp;
+		}
+	}
+
+	float GetFOV(const qangle_t& view_angles, const vec3_t& start, const vec3_t& end) {
+		vec3_t dir, fw;
+
+		// get direction and normalize.
+		dir = (end - start).normalized();
+
+		// get the forward direction vector of the view angles.
+		AngleVectors(view_angles, &fw);
+
+		// get the angle between the view angles forward directional vector and the target location.
+		return max(DEG2RAD(std::acos(fw.dot_product(dir))), 0.f);
+	}
+
+
+
+	void VectorAngles(const vec3_t& forward, qangle_t& angles, vec3_t* up) {
+		vec3_t  left;
+		float   len, up_z, pitch, yaw, roll;
+
+		// get 2d length.
+		len = forward.length_2d();
+
+		if (up && len > 0.001f) {
+			pitch = RAD2DEG(std::atan2(-forward.z, len));
+			yaw = RAD2DEG(std::atan2(forward.y, forward.x));
+
+			// get left direction vector using cross product.
+			left = (*up).cross_product(forward).normalized();
+
+			// calculate up_z.
+			up_z = (left.y * forward.x) - (left.x * forward.y);
+
+			// calculate roll.
+			roll = RAD2DEG(std::atan2(left.z, up_z));
+		}
+
+		else {
+			if (len > 0.f) {
+				// calculate pitch and yaw.
+				pitch = RAD2DEG(std::atan2(-forward.z, len));
+				yaw = RAD2DEG(std::atan2(forward.y, forward.x));
+				roll = 0.f;
+			}
+
+			else {
+				pitch = (forward.z > 0.f) ? -90.f : 90.f;
+				yaw = 0.f;
+				roll = 0.f;
+			}
+		}
+
+		// set out angles.
+		angles = { pitch, yaw, roll };
+	}
+
 	qangle_t interpolate(const qangle_t from, const qangle_t to, const float percent) {
 		return to * percent + from * (1.f - percent);
 	}

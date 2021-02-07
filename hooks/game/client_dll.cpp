@@ -55,9 +55,9 @@ void __stdcall hooks::client_dll::frame_stage_notify::fn( e_client_frame_stage s
 					}
 				}
 
-				globals::m_local->get_animlayers()[3].m_weight = 0.0f;
-				globals::m_local->get_animlayers()[3].m_cycle = 0.0f;
-				globals::m_local->get_animlayers()[12].m_weight = 0.0f;
+				//globals::m_local->get_animlayers()[3].m_weight = 0.0f;
+				//globals::m_local->get_animlayers()[3].m_cycle = 0.0f;
+				//globals::m_local->get_animlayers()[12].m_weight = 0.0f;
 
 				g_animations->manage_fake_animations( );
 				g_animations->manage_local_animations( );

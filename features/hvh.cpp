@@ -161,6 +161,7 @@ void hvh::adjustyaw() {
 }
 
 void hvh::sendpacket(bool& send) {
+	//проверку на исэлив добавь долбоеб , еблан сука ис эливвввв добавь!!!!!!!!!!!!!Ы
 	bool lag = false;
 	int m_value = (int)m_cfg.misc.lag_value;
 	auto weapon = globals::m_local->get_active_weapon();

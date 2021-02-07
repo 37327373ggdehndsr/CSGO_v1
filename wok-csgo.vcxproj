@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="events\callbacks\player_hurt.cpp" />
     <ClCompile Include="events\events.cpp" />
+    <ClCompile Include="features\chams.cpp" />
     <ClCompile Include="features\movement.cpp" />
     <ClCompile Include="features\animations.cpp" />
     <ClCompile Include="features\hvh.cpp" />
@@ -141,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="common_includes.h" />
     <ClInclude Include="events\events.h" />
+    <ClInclude Include="features\chams.h" />
     <ClInclude Include="features\features.h" />
     <ClInclude Include="features\movement.h" />
     <ClInclude Include="features\animations.h" />

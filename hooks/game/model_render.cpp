@@ -7,9 +7,9 @@ void __fastcall hooks::model_render::draw_model_execute::fn( i_model_render* ecx
 	if ( !bones || interfaces::model_render->is_forced_material_override( ) && !strstr( info.m_model->m_name, "arms" ) && !strstr( info.m_model->m_name, "weapons/v_" ) )
 		return original( ecx, context, state, info, bones );
 	
-	//if ( globals::m_local )
-	//	chams->on_render( ecx, context, state, info, bones );
+	if (chams->on_draw_model(ecx, context, state, info, bones)) {
+		original(ecx, context, state, info, bones);
+	}
 
-	original( ecx, context, state, info, bones );
 	interfaces::model_render->forced_material_override( );
 }

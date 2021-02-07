@@ -68,8 +68,11 @@ namespace detours {
 
 	void init()
 	{
-		static const auto send_move_add = SIG("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A").get();
-		original_cl_move = (decltype(&send_move))DetourFunction((PBYTE)send_move_add, (PBYTE)send_move);
+		if (interfaces::engine->is_connected())
+		{
+			static const auto send_move_add = SIG("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 56 57 8B 3D ? ? ? ? 8A").get();
+			original_cl_move = (decltype(&send_move))DetourFunction((PBYTE)send_move_add, (PBYTE)send_move);
+		}
 
 		static const auto skip_frame = SIG("client.dll", "57 8B F9 8B 07 8B 80 ? ? ? ? FF D0 84 C0 75 02").get();
 		DetourFunction((PBYTE)skip_frame, (PBYTE)should_skip_animation_frame);
