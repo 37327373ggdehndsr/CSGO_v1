@@ -80,9 +80,9 @@ namespace detours {
 		static const auto c_cs_player_table = SIG("client.dll", "55 8B EC 83 E4 F8 83 EC 18 56 57 8B F9 89 7C 24 0C").get() + 0x47;
 		DWORD* ex_pointer = (DWORD*)*(DWORD*)(c_cs_player_table);
 
-		origin_update_client_side_animation = (update_client_side_animation_t)DetourFunction((PBYTE)ex_pointer[223], (PBYTE)update_client_side_animation);
-		orig_do_extra_bone_processing = (do_extra_bone_processing_t)DetourFunction((PBYTE)ex_pointer[197], (PBYTE)do_extra_bone_processing);
-		origin_standard_blending_rules = (standard_blending_rules_t)DetourFunction((PBYTE)ex_pointer[205], (PBYTE)standard_blending_rules);
+		origin_update_client_side_animation = (update_client_side_animation_t)DetourFunction((PBYTE)ex_pointer	[223], (PBYTE)update_client_side_animation);
+		orig_do_extra_bone_processing = (do_extra_bone_processing_t)DetourFunction((PBYTE)ex_pointer		    [197], (PBYTE)do_extra_bone_processing);
+		origin_standard_blending_rules = (standard_blending_rules_t)DetourFunction((PBYTE)ex_pointer			[205], (PBYTE)standard_blending_rules);
 	}
 
 	detours::update_client_side_animation_t detours::origin_update_client_side_animation;

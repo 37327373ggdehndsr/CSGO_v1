@@ -67,8 +67,7 @@ void __stdcall hooks::client_dll::frame_stage_notify::fn( e_client_frame_stage s
 			{ 
 				if ( globals::m_local->is_alive( ) && interfaces::input->m_camera_in_third_person )
 					interfaces::prediction->set_local_angles( globals::angles::m_non_visual );
-				if ( globals::m_local->is_alive( ) )
-				{ 
+				if ( globals::m_local->is_alive( ) ){ 
 					if ( globals::m_local->get_flags( ) & FL_ONGROUND ) {
 						globals::m_local->get_anim_state( )->m_on_ground = true;
 					}

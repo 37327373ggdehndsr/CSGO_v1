@@ -85,7 +85,6 @@ namespace hooks {
 			using T = bool(__thiscall*)(void*);
 			bool __fastcall fn(void* p);
 		}
-
 	}
 
 	namespace surface {

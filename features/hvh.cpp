@@ -110,8 +110,9 @@ void hvh::preparefake() {
 	if (globals::m_packet)
 		need_to_flip = !need_to_flip;
 
-	need_to_flip ? globals::m_cmd->m_view_angles.y -= m_cfg.antiaim.jitter :	
-												   globals::m_cmd->m_view_angles.y += m_cfg.antiaim.jitter;
+	need_to_flip ? globals::m_cmd->m_view_angles.y -= m_cfg.antiaim.jitter :  globals::m_cmd->m_view_angles.y += m_cfg.antiaim.jitter;
+
+
 	bool state = m_cfg.antiaim.key_swap;
 
 	m_side = m_cfg.antiaim.jitter_around ? 

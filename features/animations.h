@@ -38,9 +38,9 @@ struct animation
 	qangle_t				last_reliable_angle{ };
 	qangle_t				eye_angles;
 	qangle_t				abs_ang;
-	int						flags{ };
-	int						eflags{ };
-	int						effects{ };
+	bit_flag_t<uint32_t>	flags{ };
+	bit_flag_t<uint32_t>	eflags{ };
+	bit_flag_t<uint32_t>	effects{ };
 	float					m_flFeetCycle{ };
 	float					m_flFeetYawRate{ };
 	int						lag{ };
